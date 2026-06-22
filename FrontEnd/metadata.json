@@ -1,0 +1,6 @@
+{
+  "name": "ECG Analyzer",
+  "description": "AI-powered heart abnormality detection from ECG images",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

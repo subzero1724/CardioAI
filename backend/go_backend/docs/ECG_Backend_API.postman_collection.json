@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "ecg-backend-api-v1",
+		"name": "ECG Backend API",
+		"description": "Complete API collection for the ECG Analysis Backend Service.\n\n## Quick Start\n1. Run `Register` to create an account\n2. The JWT token is auto-saved to the `token` variable\n3. Run `ECG Predict` — the token is auto-attached\n\n## Base URL\n`http://localhost:8080`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "health"]
+						},
+						"description": "Check backend and AI service health status.\n\nNo authentication required."
+					},
+					"response": [
+						{
+							"name": "Both Healthy",
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Health check\",\n  \"data\": {\n    \"backend\": \"healthy\",\n    \"ai_service\": \"healthy\"\n  }\n}"
+						},
+						{
+							"name": "AI Service Down",
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Health check\",\n  \"data\": {\n    \"backend\": \"healthy\",\n    \"ai_service\": \"unreachable\"\n  }\n}"
+						}
+					]
+				}
+			],
+			"description": "System health monitoring endpoints."
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var json = pm.response.json();",
+									"    if (json.data && json.data.token) {",
+									"        pm.collectionVariables.set('token', json.data.token);",
+									"        console.log('✓ Token saved to collection variable');",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"doctor@hospital.com\",\n  \"name\": \"Dr. Smith\",\n  \"password\": \"securepass123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Create a new user account.\n\n**Auto-saves** the JWT token to the `token` collection variable on success.\n\n### Validation Rules\n- `email`: required, must be valid email format\n- `name`: required, 2–100 characters\n- `password`: required, 6–72 characters"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"status": "Created",
+							"code": 201,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Registration successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTUwZTg0MDAtZTI5Yi00MWQ0LWE3MTYtNDQ2NjU1NDQwMDAwIiwiZW1haWwiOiJkb2N0b3JAaG9zcGl0YWwuY29tIiwiZXhwIjoxNzE2MzAwMDAwLCJpYXQiOjE3MTYyMTM2MDAsImlzcyI6ImVjZy1iYWNrZW5kIn0.example\",\n    \"user\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"email\": \"doctor@hospital.com\",\n      \"name\": \"Dr. Smith\",\n      \"created_at\": \"2026-05-20T15:00:00Z\",\n      \"updated_at\": \"2026-05-20T15:00:00Z\"\n    }\n  }\n}"
+						},
+						{
+							"name": "Duplicate Email",
+							"status": "Conflict",
+							"code": 409,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"email already registered\"\n}"
+						},
+						{
+							"name": "Validation Error",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Invalid request: Key: 'RegisterRequest.Email' Error:Field validation for 'Email' failed on the 'email' tag\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var json = pm.response.json();",
+									"    if (json.data && json.data.token) {",
+									"        pm.collectionVariables.set('token', json.data.token);",
+									"        console.log('✓ Token saved to collection variable');",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"doctor@hospital.com\",\n  \"password\": \"securepass123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Authenticate with email and password.\n\n**Auto-saves** the JWT token to the `token` collection variable on success."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"email\": \"doctor@hospital.com\",\n      \"name\": \"Dr. Smith\",\n      \"created_at\": \"2026-05-20T15:00:00Z\",\n      \"updated_at\": \"2026-05-20T15:00:00Z\"\n    }\n  }\n}"
+						},
+						{
+							"name": "Invalid Credentials",
+							"status": "Unauthorized",
+							"code": 401,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"invalid email or password\"\n}"
+						}
+					]
+				}
+			],
+			"description": "User authentication endpoints.\n\nBoth Register and Login auto-save the JWT token to the `{{token}}` collection variable via post-response scripts."
+		},
+		{
+			"name": "ECG",
+			"item": [
+				{
+					"name": "ECG Predict",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": "JWT token (auto-populated after Register/Login)"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "",
+									"description": "ECG image file (PNG, JPG, or JPEG). Max 10 MB."
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ecg/predict",
+							"host": ["{{base_url}}"],
+							"path": ["api", "ecg", "predict"]
+						},
+						"description": "Upload an ECG image for AI-powered analysis.\n\n### Authentication\nRequires a valid JWT token in the `Authorization: Bearer <token>` header.\n\n### File Requirements\n- **Format:** PNG, JPG, or JPEG\n- **Max size:** 10 MB\n- **Form field name:** `file`\n\n### Processing\n1. Go backend validates the file\n2. Image is forwarded to the Python AI service\n3. Ensemble of 3 models (VGG16 + ResNet34 + DenseNet121) runs inference\n4. Classification via soft voting + regression averaging\n5. Results are returned with physiological clipping applied\n\n### Classification Output\n- `Normal`\n- `Myocardial_Infarction`\n- `Other_Heart_Disease`\n\n### Regression Features\nHR, RR, PR, QRS, QT, QTc, AXIS, RV5, SV1, R_plus_S"
+					},
+					"response": [
+						{
+							"name": "Prediction Success",
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": true,\n  \"message\": \"ECG analysis completed\",\n  \"data\": {\n    \"prediction\": \"Myocardial_Infarction\",\n    \"confidence\": 78.33,\n    \"features\": {\n      \"HR\": 80.5,\n      \"RR\": 0.87,\n      \"PR\": 0.12,\n      \"QRS\": 0.16,\n      \"QT\": 0.36,\n      \"QTc\": 0.42,\n      \"AXIS\": 15.1,\n      \"RV5\": 0.93,\n      \"SV1\": 0.95,\n      \"R_plus_S\": 1.94\n    },\n    \"timestamp\": \"2026-05-20T15:30:00Z\"\n  }\n}"
+						},
+						{
+							"name": "Normal Result",
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": true,\n  \"message\": \"ECG analysis completed\",\n  \"data\": {\n    \"prediction\": \"Normal\",\n    \"confidence\": 92.15,\n    \"features\": {\n      \"HR\": 72.3,\n      \"RR\": 0.83,\n      \"PR\": 0.16,\n      \"QRS\": 0.09,\n      \"QT\": 0.38,\n      \"QTc\": 0.41,\n      \"AXIS\": 55.2,\n      \"RV5\": 1.45,\n      \"SV1\": 0.78,\n      \"R_plus_S\": 2.23\n    },\n    \"timestamp\": \"2026-05-20T15:31:00Z\"\n  }\n}"
+						},
+						{
+							"name": "No File Uploaded",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"ECG image file is required (form field: 'file')\"\n}"
+						},
+						{
+							"name": "Invalid File Type",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Invalid file type. Accepted: PNG, JPG, JPEG\"\n}"
+						},
+						{
+							"name": "File Too Large",
+							"status": "Bad Request",
+							"code": 400,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"File too large. Maximum size: 10 MB\"\n}"
+						},
+						{
+							"name": "Missing Token",
+							"status": "Unauthorized",
+							"code": 401,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Authorization header is required\"\n}"
+						},
+						{
+							"name": "Invalid Token",
+							"status": "Unauthorized",
+							"code": 401,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"Invalid or expired token\"\n}"
+						},
+						{
+							"name": "AI Service Error",
+							"status": "Internal Server Error",
+							"code": 500,
+							"header": [
+								{"key": "Content-Type", "value": "application/json"}
+							],
+							"body": "{\n  \"success\": false,\n  \"error\": \"ECG analysis failed. Please try again later.\"\n}"
+						}
+					]
+				}
+			],
+			"description": "ECG image analysis endpoints.\n\nAll endpoints require JWT authentication."
+		}
+	]
+}
