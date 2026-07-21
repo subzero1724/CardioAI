@@ -10,7 +10,6 @@
 [![Go](https://img.shields.io/badge/Go-1.25+-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 <br/>
 
@@ -354,26 +353,6 @@ The evaluation pipeline (`evaluation.py`) generates comprehensive performance me
 | **5-Fold Cross Validation** | Mean ± Std accuracy across folds (ResNet34) |
 | **Training Curves** | Train/Val accuracy and loss per epoch |
 
-### Generated Outputs
-
-All evaluation outputs are saved to the `multitask_outputs/` directory:
-
-| File | Content |
-|------|---------|
-| `5_1_1_dataset_distribution.png` | Class distribution per data split |
-| `5_1_1_dataset_pie.png` | Overall class proportion |
-| `5_1_1_sample_ecg_images.png` | Sample ECG images per class |
-| `5_1_2_1_clinical_params_boxplot.png` | Clinical parameter distribution per class |
-| `5_1_2_2_zscore_comparison.png` | Before vs after Z-Score normalization |
-| `5_1_2_2_correlation_heatmap.png` | Feature correlation heatmap |
-| `5_1_3_1_training_curves_accuracy.png` | Training & validation accuracy curves |
-| `5_1_3_1_training_curves_loss.png` | Training & validation loss curves |
-| `confusion_matrices_all.png` | Confusion matrices (all models) |
-| `accuracy_comparison.png` | Bar chart comparing model accuracies |
-| `roc_curves_all_models.png` | ROC curves with AUC |
-| `regression_scatter_HR_QTc.png` | Actual vs predicted scatter plots |
-| `per_class_performance_ensemble.png` | Per-class precision/recall/F1 |
-| `report_*.csv` | Detailed classification reports |
 
 ---
 
