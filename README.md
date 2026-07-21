@@ -514,12 +514,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## 📝 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 📚 References
 
 1. **PTB Diagnostic ECG Database** — Bousseljot, R., Kreiseler, D., Schnabel, A. *"Nutzung der EKG-Signaldatenbank CARDIODAT der PTB über das Internet"*, Biomedizinische Technik, 1995. [PhysioNet](https://physionet.org/content/ptbdb/1.0.0/)
